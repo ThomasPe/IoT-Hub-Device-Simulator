@@ -1,0 +1,34 @@
+﻿<Page
+    x:Class="IoTHubDeviceSimulator.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:IoTHubDeviceSimulator"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Loaded="Page_Loaded"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ListView x:Name="DeviceList">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}"/>
+                        <TextBlock Text="{Binding IsRunnuing}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <CommandBar Grid.Row="1">
+            <AppBarButton x:Name="AddDeviceBtn" Icon="Add" Label="Add Device" Click="AddDeviceBtn_Click"/>
+
+            <AppBarButton x:Name="StartAllBtn" Icon="Play" Label="Start all" Click="StartAllBtn_Click"/>
+            <AppBarButton x:Name="StopAllBtn" Icon="Stop" Label="Stop all" Click="StopAllBtn_Click"/>
+        </CommandBar>
+    </Grid>
+</Page>
