@@ -16,7 +16,7 @@ namespace IoTHubDeviceSimulator
         private readonly DispatcherTimer _timer = new DispatcherTimer();
 
         public string Name { get; set; }
-        public string ConnectionString { get; set; } = "HostName=IoTHubDeviceSimulator.azure-devices.net;DeviceId=Device1;SharedAccessKey=yz/QG7F8csKmYNDvfjSTEFTNA6gT3pFLuPtQC5j8u/M=";
+        public string ConnectionString { get; set; }
         public bool IsRunnuing { get => _timer.IsEnabled; }
 
         public IoTDevice(string connectionString)
