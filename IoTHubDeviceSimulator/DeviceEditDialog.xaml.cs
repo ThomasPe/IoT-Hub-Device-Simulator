@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -20,18 +8,31 @@ namespace IoTHubDeviceSimulator
     public sealed partial class DeviceEditDialog : ContentDialog
     {
         public string ConnectionString { get; set; }
+        public int MyProperty { get; set; }
         public DeviceEditDialog()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
+            ErrorTb.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(ConnectionStringTb.Text))
             {
                 args.Cancel = true;
+                ErrorTb.Visibility = Visibility.Visible;
             }
-            ConnectionString = ConnectionStringTb.Text;
+            try
+            {
+                new IoTDevice(ConnectionStringTb.Text);
+                ConnectionString = ConnectionStringTb.Text;
+            }
+            catch
+            {
+                args.Cancel = true; 
+                ErrorTb.Visibility = Visibility.Visible;
+            }
+
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

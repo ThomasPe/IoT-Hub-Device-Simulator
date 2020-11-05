@@ -1,6 +1,7 @@
 ﻿using Microsoft.Azure.Devices.Client;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,16 +9,34 @@ using Windows.UI.Xaml;
 
 namespace IoTHubDeviceSimulator
 {
-    public class IoTDevice
+    public class IoTDevice : INotifyPropertyChanged
     {
         private static readonly Random _randomGenerator = new Random();
 
         private DeviceClient _deviceClient;
         private readonly DispatcherTimer _timer = new DispatcherTimer();
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void RaisePropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+
         public string Name { get; set; }
         public string ConnectionString { get; set; }
-        public bool IsRunnuing { get => _timer.IsEnabled; }
+        public bool IsRunning { get => _timer.IsEnabled; }
+
+        private DateTime? _lastUpdate;
+        public DateTime? LastUpdate 
+        { 
+            get  => _lastUpdate;
+            set
+            {
+                _lastUpdate = value;
+                RaisePropertyChanged(nameof(LastUpdate));
+            }
+        }
 
         public IoTDevice(string connectionString)
         {
@@ -27,6 +46,8 @@ namespace IoTHubDeviceSimulator
 
         public void Start()
         {
+            if (IsRunning)
+                return;
             if (_deviceClient == null)
             {
                 _deviceClient = DeviceClient.CreateFromConnectionString(ConnectionString);
@@ -34,11 +55,15 @@ namespace IoTHubDeviceSimulator
             _timer.Interval = TimeSpan.FromSeconds(5);
             _timer.Tick += Timer_Tick;
             _timer.Start();
+            RaisePropertyChanged(nameof(IsRunning));
         }
 
         public void Stop()
         {
+            if (!IsRunning)
+                return;
             _timer.Stop();
+            RaisePropertyChanged(nameof(IsRunning));
             _timer.Tick -= Timer_Tick;
         }
 
@@ -66,6 +91,7 @@ namespace IoTHubDeviceSimulator
 
             await _deviceClient.SendEventAsync(eventMessage);
 
+            LastUpdate = DateTime.Now;
         }
     }
 }

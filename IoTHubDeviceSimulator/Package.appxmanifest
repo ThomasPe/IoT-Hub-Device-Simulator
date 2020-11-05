@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="6851f62c-5ef5-4047-b9fe-d68ab9fdd924"
-    Publisher="CN=pente"
+    Name="18031Medienstudio.net.IoTHubDeviceSimulator"
+    Publisher="CN=0CEBA8FF-9F6C-4528-A24A-8C3F8C5E84E3"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="6851f62c-5ef5-4047-b9fe-d68ab9fdd924" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="ec68cfdc-57aa-4646-a6a4-e66c46a99031" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>IoTHubDeviceSimulator</DisplayName>
-    <PublisherDisplayName>pente</PublisherDisplayName>
+    <DisplayName>IoT Hub Device Simulator</DisplayName>
+    <PublisherDisplayName>Medienstudio.net</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -32,12 +32,18 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="IoTHubDeviceSimulator.App">
       <uap:VisualElements
-        DisplayName="IoTHubDeviceSimulator"
+        DisplayName="IoT Hub Device Simulator"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="IoTHubDeviceSimulator"
         BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="IoT Simulator">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+            <uap:ShowOn Tile="wide310x150Logo"/>
+            <uap:ShowOn Tile="square310x310Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile >
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
     </Application>

@@ -10,9 +10,13 @@
     PrimaryButtonText="Add"
     SecondaryButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    Background="{StaticResource SystemControlChromeHighAcrylicElementMediumBrush}">
 
     <Grid>
-        <TextBox x:Name="ConnectionStringTb" PlaceholderText="HostName=MyIoTHub.azure-devices.net;..." Header="Connection String"></TextBox>
+        <StackPanel>
+            <TextBox x:Name="ConnectionStringTb" PlaceholderText="HostName=MyIoTHub.azure-devices.net;..." Header="Connection String" Width="300"></TextBox>
+            <TextBlock x:Name="ErrorTb" Text="Error creating a new IoT Device. Please make sure your Connection String is valid." Visibility="Collapsed" Margin="0 20 0 0" Foreground="Red" TextWrapping="Wrap" Width="300"></TextBlock>
+        </StackPanel>
     </Grid>
 </ContentDialog>

@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.ApplicationModel.Core;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace IoTHubDeviceSimulator
@@ -71,6 +64,22 @@ namespace IoTHubDeviceSimulator
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+
+            // Set active window colors
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonForegroundColor = Colors.DarkGray;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
+            titleBar.ButtonHoverForegroundColor = Colors.Black;
+            titleBar.ButtonHoverBackgroundColor = Colors.White;
+            titleBar.ButtonPressedForegroundColor = Colors.Black;
+            titleBar.ButtonPressedBackgroundColor = Colors.Gray;
+
+            // Set inactive window colors
+            titleBar.ButtonInactiveForegroundColor = Colors.Gray;
+            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
         }
 
         /// <summary>
