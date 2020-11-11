@@ -135,10 +135,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DeviceEditDialog.xaml.cs">
+    <Compile Include="IoTDevice\DeviceEditDialog.xaml.cs">
       <DependentUpon>DeviceEditDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IoTDevice.cs" />
+    <Compile Include="IoTDevice\Device.cs" />
+    <Compile Include="IoTDevice\NumberFieldsConverter.cs" />
+    <Compile Include="IoTDevice\ObjectToVisibilityConverter.cs" />
+    <Compile Include="IoTDevice\Sensor.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -210,7 +213,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="DeviceEditDialog.xaml">
+    <Page Include="IoTDevice\DeviceEditDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -225,12 +228,15 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Devices.Client">
-      <Version>1.33.0</Version>
+      <Version>1.33.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
+      <Version>6.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>6.1.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">

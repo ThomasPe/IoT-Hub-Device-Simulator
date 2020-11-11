@@ -1,0 +1,58 @@
+﻿<ContentDialog xmlns:my="using:Microsoft.Toolkit.Uwp.UI.Controls" 
+    x:Class="IoTHubDeviceSimulator.IoTDevice.DeviceEditDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:IoTHubDeviceSimulator"
+    xmlns:device="using:IoTHubDeviceSimulator.IoTDevice"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d"
+    Title="Add IoT Device"
+    PrimaryButtonText="Add"
+    SecondaryButtonText="Cancel"
+    Loaded="ContentDialog_Loaded"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    Background="{StaticResource SystemControlChromeHighAcrylicElementMediumBrush}">
+    <ContentDialog.Resources>
+        <device:NumberFieldsConverter x:Name="NumberFieldsConverter"/>
+        <device:ObjectToVisibilityConverter x:Name="ObjectToVisibilityConverter"/>
+        <DataTemplate x:Key="ListViewItemTemplate" x:DataType="device:Sensor">
+            <controls:Expander Header="{x:Bind Name, Mode=OneWay}" Margin="0" HorizontalContentAlignment="Stretch">
+                <StackPanel Margin="12">
+                    <TextBox Text="{x:Bind Name, Mode=TwoWay}" Header="Name" Description="The key in your JSON, e.g. {&quot;name&quot;: &quot;text&quot;}" HorizontalAlignment="Stretch" Margin="0 0 0 12"/>
+                    <ComboBox x:Name="SensorTypeCb" SelectedItem="{x:Bind Type, Mode=TwoWay}" Header="Value Type" HorizontalAlignment="Stretch" Margin="0 0 0 12" Description="e.g {&quot;name&quot;: &quot;text&quot;} vs {&quot;name&quot;: 123}">
+                        <x:String>String</x:String>
+                        <x:String>Integer</x:String>
+                        <x:String>Double</x:String>
+                    </ComboBox>
+                    <TextBox Text="{x:Bind Value, Mode=TwoWay}" Header="Text" Margin="0 0 0 12" Visibility="{x:Bind Type, Mode=OneWay, Converter={StaticResource NumberFieldsConverter}, ConverterParameter=true}"/>
+                    <TextBox Text="{x:Bind Min, Mode=TwoWay}" Header="Minimum Value" Margin="0 0 0 12" Description="Minimum random value" Visibility="{x:Bind Type, Mode=OneWay, Converter={StaticResource NumberFieldsConverter}}"/>
+                    <TextBox Text="{x:Bind Max, Mode=TwoWay}" Header="Maximum Value" Margin="0 0 0 12" Description="Maximum random value" Visibility="{x:Bind Type, Mode=OneWay, Converter={StaticResource NumberFieldsConverter}}"/>
+                    <Button x:Name="RemoveSensorBtn" Content="Remove Sensor" Click="RemoveSensorBtn_Click" Style="{StaticResource ButtonRevealStyle}"/>
+                </StackPanel>
+            </controls:Expander>
+        </DataTemplate>
+    </ContentDialog.Resources>
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel>
+                <TextBox x:Name="ConnectionStringTb" PlaceholderText="HostName=MyIoTHub.azure-devices.net;..." Header="Connection String" Width="300" Text="{x:Bind Device.ConnectionString, Mode=TwoWay}"></TextBox>
+                <TextBlock x:Name="ErrorTb" Text="Error creating a new IoT Device. Please make sure your Connection String is valid." Visibility="Collapsed" Margin="0 12 0 0" Foreground="Red" TextWrapping="Wrap" Width="300"></TextBlock>
+                <StackPanel Visibility="{x:Bind Device, Mode=OneWay, Converter={StaticResource ObjectToVisibilityConverter}}">
+                    <ListView ItemTemplate="{StaticResource ListViewItemTemplate}" ItemsSource="{x:Bind Device.Sensors, Mode=TwoWay}" SelectionMode="None" Margin="0 12 0 12">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                    <Button Content="Add Sensor" x:Name="AddSensorBtn" Click="AddSensorBtn_Click" Style="{StaticResource ButtonRevealStyle}"></Button>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</ContentDialog>

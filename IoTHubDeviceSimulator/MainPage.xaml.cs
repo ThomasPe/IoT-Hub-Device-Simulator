@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using IoTHubDeviceSimulator.IoTDevice;
+using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -13,7 +14,7 @@ namespace IoTHubDeviceSimulator
 {
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
-        public ObservableCollection<IoTDevice> Devices { get; set; } = new ObservableCollection<IoTDevice>();
+        public ObservableCollection<Device> Devices { get; set; } = new ObservableCollection<Device>();
 
         public MainPage()
         {
@@ -55,17 +56,9 @@ namespace IoTHubDeviceSimulator
         {
             var dialog = new DeviceEditDialog();
             await dialog.ShowAsync();
-            if (!string.IsNullOrEmpty(dialog.ConnectionString))
+            if (dialog.Device != null)
             {
-                try
-                {
-                    var d = new IoTDevice(dialog.ConnectionString);
-                    Devices.Add(d);
-                }
-                catch
-                {
-
-                }
+                Devices.Add(dialog.Device);
             }
             UpdateStoredDevices();
         }
@@ -73,7 +66,7 @@ namespace IoTHubDeviceSimulator
         private void DeviceDelete_Click(object sender, RoutedEventArgs e)
         {
             var b = sender as Button;
-            IoTDevice device = b.DataContext as IoTDevice;
+            Device device = b.DataContext as Device;
             Devices.Remove(device);
             UpdateStoredDevices();
         }
@@ -83,7 +76,7 @@ namespace IoTHubDeviceSimulator
             var devicesJson = SettingsService.GetValue("devices");
             if (!string.IsNullOrEmpty(devicesJson))
             {
-                var devices = JsonConvert.DeserializeObject<ObservableCollection<IoTDevice>>(devicesJson);
+                var devices = JsonConvert.DeserializeObject<ObservableCollection<Device>>(devicesJson);
                 Devices.Clear();
                 foreach (var d in devices)
                 {
@@ -104,24 +97,31 @@ namespace IoTHubDeviceSimulator
             DeviceList.SelectedIndex = -1;
         }
 
-        private void DeviceSettings_Click(object sender, RoutedEventArgs e)
+        private async void DeviceSettings_Click(object sender, RoutedEventArgs e)
         {
             var b = sender as Button;
-            IoTDevice device = b.DataContext as IoTDevice;
-            Debug.WriteLine(device.Name);
+            Device device = b.DataContext as Device;
+
+            var dialog = new DeviceEditDialog
+            {
+                Device = device,
+                IsEditMode = true
+            };
+            await dialog.ShowAsync();
+            UpdateStoredDevices();
         }
 
         private void DeviceStop_Click(object sender, RoutedEventArgs e)
         {
             var b = sender as Button;
-            IoTDevice device = b.DataContext as IoTDevice;
+            Device device = b.DataContext as Device;
             device.Stop();
         }
 
         private void DeviceStart_Click(object sender, RoutedEventArgs e)
         {
             var b = sender as Button;
-            IoTDevice device = b.DataContext as IoTDevice;
+            Device device = b.DataContext as Device;
             device.Start();
         }
 

@@ -1,15 +1,18 @@
-﻿using Microsoft.Azure.Devices.Client;
+﻿using IoTHubDeviceSimulator.IoTDevice;
+using Microsoft.Azure.Devices.Client;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 
-namespace IoTHubDeviceSimulator
+namespace IoTHubDeviceSimulator.IoTDevice
 {
-    public class IoTDevice : INotifyPropertyChanged
+    public class Device : INotifyPropertyChanged
     {
         private static readonly Random _randomGenerator = new Random();
 
@@ -22,9 +25,29 @@ namespace IoTHubDeviceSimulator
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                RaisePropertyChanged(nameof(Name)); 
+            }
+        }
 
-        public string Name { get; set; }
-        public string ConnectionString { get; set; }
+        private string _connectionString;
+        public string ConnectionString
+        {
+            get => _connectionString;
+            set
+            {
+                _connectionString = value;
+                SetNameFromConnectionString();
+                RaisePropertyChanged(nameof(ConnectionString));
+            }
+        }
+
         public bool IsRunning { get => _timer.IsEnabled; }
 
         private DateTime? _lastUpdate;
@@ -38,10 +61,20 @@ namespace IoTHubDeviceSimulator
             }
         }
 
-        public IoTDevice(string connectionString)
+        public ObservableCollection<Sensor> Sensors { get; set; } = new ObservableCollection<Sensor>();
+
+        public Device(string connectionString)
         {
             ConnectionString = connectionString;
-            Name = ConnectionString.Split(';')[1].Replace("DeviceId=", "");
+            SetNameFromConnectionString();
+        }
+
+        private void SetNameFromConnectionString(bool force = false)
+        {
+            if(string.IsNullOrEmpty(Name) || force)
+            {
+                Name = ConnectionString.Split(';')[1].Replace("DeviceId=", "");
+            }
         }
 
         public void Start()
@@ -74,10 +107,19 @@ namespace IoTHubDeviceSimulator
 
         private async Task SendEventAsync()
         {
-            float temperature = _randomGenerator.Next(20, 35);
-            float humidity = _randomGenerator.Next(60, 80);
 
-            string dataBuffer = $"{{\"device\":\"{Name}\",\"temperature\":{temperature},\"humidity\":{humidity}}}";
+            var msg = new Dictionary<string, object>
+            {
+                { "name", Name }
+            };
+
+            foreach (var s in Sensors)
+            {
+                var x = s.GetReading();
+                msg.Add(x.Key, x.Value);
+            }
+
+            string dataBuffer = JsonConvert.SerializeObject(msg);
 
             using var eventMessage = new Message(Encoding.UTF8.GetBytes(dataBuffer))
             {
