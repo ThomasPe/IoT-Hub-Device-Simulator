@@ -6,6 +6,9 @@ namespace IoTHubDeviceSimulator.Services
 {
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Add Serilog.
+        /// </summary>
         public static void AddLogger(this ServiceCollection services)
         {
             services.AddLogging(loggingBuilder =>

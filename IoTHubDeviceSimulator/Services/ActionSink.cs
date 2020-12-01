@@ -14,13 +14,11 @@ namespace IoTHubDeviceSimulator.Services
     public class ActionSink : ILogEventSink
     {
         private readonly ITextFormatter _formatter = new MessageTemplateTextFormatter("{Timestamp} [{Level}] {Message}{Exception}");
+
+        /// <summary>
+        /// The event, that is fired, when a new log message arrives.
+        /// </summary>
         public static event Action<string> OnLog;
-
-        public readonly Guid Guid = Guid.NewGuid();
-
-        public ActionSink()
-        {
-        }
 
         public void Emit(LogEvent logEvent)
         {

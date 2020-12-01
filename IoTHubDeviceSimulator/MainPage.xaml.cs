@@ -3,14 +3,10 @@ using IoTHubDeviceSimulator.Services;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using Windows.Foundation;
 using Windows.Services.Store;
-using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -33,7 +29,6 @@ namespace IoTHubDeviceSimulator
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
             _logger = (ILogger)ServiceProvider.Container.GetService(typeof(ILogger<MainPage>));
-
             ActionSink.OnLog += (message) => Logs.Add(message);
         }
 
