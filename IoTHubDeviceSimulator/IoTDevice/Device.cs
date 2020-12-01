@@ -1,5 +1,7 @@
 ﻿using IoTHubDeviceSimulator.IoTDevice;
+using IoTHubDeviceSimulator.Services;
 using Microsoft.Azure.Devices.Client;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,7 @@ namespace IoTHubDeviceSimulator.IoTDevice
     public class Device : INotifyPropertyChanged
     {
         private static readonly Random _randomGenerator = new Random();
+        private readonly ILogger _logger;
 
         private DeviceClient _deviceClient;
         private readonly DispatcherTimer _timer = new DispatcherTimer();
@@ -32,7 +35,7 @@ namespace IoTHubDeviceSimulator.IoTDevice
             set
             {
                 _name = value;
-                RaisePropertyChanged(nameof(Name)); 
+                RaisePropertyChanged(nameof(Name));
             }
         }
 
@@ -51,9 +54,9 @@ namespace IoTHubDeviceSimulator.IoTDevice
         public bool IsRunning { get => _timer.IsEnabled; }
 
         private DateTime? _lastUpdate;
-        public DateTime? LastUpdate 
-        { 
-            get  => _lastUpdate;
+        public DateTime? LastUpdate
+        {
+            get => _lastUpdate;
             set
             {
                 _lastUpdate = value;
@@ -65,13 +68,15 @@ namespace IoTHubDeviceSimulator.IoTDevice
 
         public Device(string connectionString)
         {
+            _logger = (ILogger)ServiceProvider.Container.GetService(typeof(ILogger<Device>));
+
             ConnectionString = connectionString;
             SetNameFromConnectionString();
         }
 
         private void SetNameFromConnectionString(bool force = false)
         {
-            if(string.IsNullOrEmpty(Name) || force)
+            if (string.IsNullOrEmpty(Name) || force)
             {
                 Name = ConnectionString.Split(';')[1].Replace("DeviceId=", "");
             }
@@ -89,6 +94,8 @@ namespace IoTHubDeviceSimulator.IoTDevice
             _timer.Tick += Timer_Tick;
             _timer.Start();
             RaisePropertyChanged(nameof(IsRunning));
+
+            _logger.LogInformation($"Started device {Name}");
         }
 
         public void Stop()
@@ -98,6 +105,8 @@ namespace IoTHubDeviceSimulator.IoTDevice
             _timer.Stop();
             RaisePropertyChanged(nameof(IsRunning));
             _timer.Tick -= Timer_Tick;
+
+            _logger.LogInformation($"Stopped device {Name}");
         }
 
         private async void Timer_Tick(object sender, object e)
@@ -132,6 +141,8 @@ namespace IoTHubDeviceSimulator.IoTDevice
             //eventMessage.Properties.Add("temperatureAlert", tempAlert.ToString());
 
             await _deviceClient.SendEventAsync(eventMessage);
+
+            _logger.LogInformation($"Device {Name} sent data: {dataBuffer}");
 
             LastUpdate = DateTime.Now;
         }

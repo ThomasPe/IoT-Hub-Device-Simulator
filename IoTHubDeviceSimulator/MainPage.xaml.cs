@@ -1,9 +1,10 @@
 ﻿using IoTHubDeviceSimulator.IoTDevice;
+using IoTHubDeviceSimulator.Services;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using Windows.Foundation;
 using Windows.Services.Store;
 using Windows.UI.ViewManagement;
@@ -14,7 +15,11 @@ namespace IoTHubDeviceSimulator
 {
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
+        private readonly ILogger _logger;
+
         public ObservableCollection<Device> Devices { get; set; } = new ObservableCollection<Device>();
+
+        public ObservableCollection<string> Logs { get; private set; } = new ObservableCollection<string>();
 
         public MainPage()
         {
@@ -22,6 +27,9 @@ namespace IoTHubDeviceSimulator
 
             ApplicationView.PreferredLaunchViewSize = new Size(800, 600);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+
+            _logger = (ILogger)ServiceProvider.Container.GetService(typeof(ILogger<MainPage>));
+            ActionSink.OnLog += (message) => Logs.Add(message);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -34,6 +42,8 @@ namespace IoTHubDeviceSimulator
         {
             GetStoredDevices();
             DeviceList.ItemsSource = Devices;
+
+            _logger.LogInformation($"Loaded {Devices.Count} devices.");
         }
 
         private void StartAllBtn_Click(object sender, RoutedEventArgs e)
