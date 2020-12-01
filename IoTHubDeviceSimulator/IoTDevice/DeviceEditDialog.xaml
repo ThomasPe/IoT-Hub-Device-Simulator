@@ -18,6 +18,7 @@
     <ContentDialog.Resources>
         <device:NumberFieldsConverter x:Name="NumberFieldsConverter"/>
         <device:ObjectToVisibilityConverter x:Name="ObjectToVisibilityConverter"/>
+        <device:StringToIntConverter x:Name="StringToIntConverter" />
         <DataTemplate x:Key="ListViewItemTemplate" x:DataType="device:Sensor">
             <controls:Expander Header="{x:Bind Name, Mode=OneWay}" Margin="0" HorizontalContentAlignment="Stretch">
                 <StackPanel Margin="12">
@@ -41,6 +42,11 @@
             <StackPanel>
                 <TextBox x:Name="ConnectionStringTb" PlaceholderText="HostName=MyIoTHub.azure-devices.net;..." Header="Connection String" Width="300" Text="{x:Bind Device.ConnectionString, Mode=TwoWay}"></TextBox>
                 <TextBlock x:Name="ErrorTb" Text="Error creating a new IoT Device. Please make sure your Connection String is valid." Visibility="Collapsed" Margin="0 12 0 0" Foreground="Red" TextWrapping="Wrap" Width="300"></TextBlock>
+                <TextBox Header="Interval (in seconds, min is 1 sec)"
+                         Text="{x:Bind Device.Interval, Mode=TwoWay, Converter={StaticResource StringToIntConverter}}"
+                         BeforeTextChanging="IntervalTb_OnBeforeTextChanging"
+                         Visibility="{x:Bind Device, Mode=OneWay, Converter={StaticResource ObjectToVisibilityConverter}}"/>
+
                 <StackPanel Visibility="{x:Bind Device, Mode=OneWay, Converter={StaticResource ObjectToVisibilityConverter}}">
                     <ListView ItemTemplate="{StaticResource ListViewItemTemplate}" ItemsSource="{x:Bind Device.Sensors, Mode=TwoWay}" SelectionMode="None" Margin="0 12 0 12">
                         <ListView.ItemContainerStyle>

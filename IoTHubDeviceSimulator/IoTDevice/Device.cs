@@ -72,6 +72,7 @@ namespace IoTHubDeviceSimulator.IoTDevice
 
             ConnectionString = connectionString;
             SetNameFromConnectionString();
+            Interval = 5;
         }
 
         private void SetNameFromConnectionString(bool force = false)
@@ -79,6 +80,20 @@ namespace IoTHubDeviceSimulator.IoTDevice
             if (string.IsNullOrEmpty(Name) || force)
             {
                 Name = ConnectionString.Split(';')[1].Replace("DeviceId=", "");
+            }
+        }
+
+        private int _interval;
+        public int Interval
+        {
+            get { return _interval; }
+            set
+            {
+                if (value < 0)
+                    return;
+
+                _interval = value;
+                RaisePropertyChanged(nameof(Interval));
             }
         }
 
@@ -90,7 +105,7 @@ namespace IoTHubDeviceSimulator.IoTDevice
             {
                 _deviceClient = DeviceClient.CreateFromConnectionString(ConnectionString);
             }
-            _timer.Interval = TimeSpan.FromSeconds(5);
+            _timer.Interval = TimeSpan.FromSeconds(Interval);
             _timer.Tick += Timer_Tick;
             _timer.Start();
             RaisePropertyChanged(nameof(IsRunning));

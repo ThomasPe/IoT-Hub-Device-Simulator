@@ -142,6 +142,7 @@
     <Compile Include="IoTDevice\NumberFieldsConverter.cs" />
     <Compile Include="IoTDevice\ObjectToVisibilityConverter.cs" />
     <Compile Include="IoTDevice\Sensor.cs" />
+    <Compile Include="IoTDevice\StringToIntConverter.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
