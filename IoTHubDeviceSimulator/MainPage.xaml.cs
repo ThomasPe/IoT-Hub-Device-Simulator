@@ -3,10 +3,14 @@ using IoTHubDeviceSimulator.Services;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using Windows.Foundation;
 using Windows.Services.Store;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -145,6 +149,62 @@ namespace IoTHubDeviceSimulator
         {
             var storeContext = StoreContext.GetDefault();
             StoreRateAndReviewResult result = await storeContext.RequestRateAndReviewAppAsync();
+        }
+
+        private async void ExportAllBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var savePicker = new FileSavePicker();
+            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            savePicker.FileTypeChoices.Add("json", new List<string>() { ".json" });
+            savePicker.SuggestedFileName = "IoT_Devices";
+
+            var file = await savePicker.PickSaveFileAsync();
+            if (file is null)
+                return;
+
+            // Prevent updates to the remote version of the file until
+            // we finish making changes and call CompleteUpdatesAsync.
+            CachedFileManager.DeferUpdates(file);
+
+            await FileIO.WriteTextAsync(file, JsonConvert.SerializeObject(Devices));
+            await CachedFileManager.CompleteUpdatesAsync(file);
+
+            _logger.LogInformation($"Successfully exported your devices to {file.Name}.");
+        }
+
+        private async void ImportBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var openPicker = new FileOpenPicker();
+            openPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            openPicker.FileTypeFilter.Add(".json");
+
+            var file = await openPicker.PickSingleFileAsync();
+            if (file is null)
+                return;
+
+            try
+            {
+                var json = await FileIO.ReadTextAsync(file);
+                var devices = JsonConvert.DeserializeObject<IEnumerable<Device>>(json);
+                foreach (var d in devices)
+                {
+                    if (Devices.Any(dev => dev.Name == d.Name))
+                    {
+                        _logger.LogWarning($"Device {d.Name} is already presented. Skip it.");
+                    }
+                    else
+                    {
+                        Devices.Add(d);
+                        _logger.LogInformation($"Successfully imported device {d.Name}");
+                    }
+                }
+
+                UpdateStoredDevices();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Couldn't parse file {file.Name}. Error: {ex.Message}");
+            }
         }
     }
 }
