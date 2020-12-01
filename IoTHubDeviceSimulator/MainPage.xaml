@@ -67,8 +67,8 @@
 
         <StackPanel Grid.Row="2" Orientation="Vertical" Padding="10">
             <TextBlock Padding="10">Log:</TextBlock>
-            <ScrollViewer Background="Black">
-                <ItemsControl ItemsSource="{x:Bind Logs}" MinHeight="200">
+            <ScrollViewer Background="Black" Height="200">
+                <ItemsControl ItemsSource="{x:Bind Logs}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" Foreground="White"/>
