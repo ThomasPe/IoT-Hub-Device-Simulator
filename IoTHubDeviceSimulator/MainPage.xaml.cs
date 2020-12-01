@@ -51,7 +51,6 @@ namespace IoTHubDeviceSimulator
             foreach (var d in Devices)
             {
                 d.Start();
-                _logger.LogInformation($"Started device {d.Name}");
             }
         }
 
@@ -60,7 +59,6 @@ namespace IoTHubDeviceSimulator
             foreach (var d in Devices)
             {
                 d.Stop();
-                _logger.LogInformation($"Stopped device {d.Name}");
             }
         }
 
