@@ -31,7 +31,7 @@
                 <StackPanel Grid.Column="1" Visibility="{x:Bind IsRunning, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}"  Orientation="Horizontal" VerticalAlignment="Stretch">
                     <Button Background="Transparent" Margin="0 0 12 0" Style="{StaticResource ButtonRevealStyle}" Click="DeviceStart_Click" VerticalAlignment="Stretch">
                         <SymbolIcon Symbol="Play"/>
-                    </Button>                    
+                    </Button>
                     <TextBlock Text="Stopped" VerticalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Column="2" VerticalAlignment="Center" Orientation="Horizontal">
@@ -52,6 +52,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -62,8 +64,22 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <Image Grid.Row="1" Source="/Assets/arrow.png" VerticalAlignment="Bottom" Height="100" Margin="0 0 220 0" HorizontalAlignment="Right" Visibility="{x:Bind Devices, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}"/>
-        <CommandBar Grid.Row="2">
+
+        <StackPanel Grid.Row="2" Orientation="Vertical" Padding="10">
+            <TextBlock Padding="10">Log:</TextBlock>
+            <ScrollViewer Background="Black">
+                <ItemsControl ItemsSource="{x:Bind Logs}" MinHeight="200">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Foreground="White"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
+
+        <Image Grid.Row="3" Source="/Assets/arrow.png" VerticalAlignment="Bottom" Height="100" Margin="0 0 220 0" HorizontalAlignment="Right" Visibility="{x:Bind Devices, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}"/>
+        <CommandBar Grid.Row="4">
             <AppBarButton x:Name="AddDeviceBtn" Icon="Add" Label="Add Device" Click="AddDeviceBtn_Click"/>
             <AppBarButton x:Name="StartAllBtn" Icon="Play" Label="Start all" Click="StartAllBtn_Click"/>
             <AppBarButton x:Name="StopAllBtn" Icon="Stop" Label="Stop all" Click="StopAllBtn_Click"/>
