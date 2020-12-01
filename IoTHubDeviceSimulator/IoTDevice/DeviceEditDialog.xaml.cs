@@ -44,7 +44,7 @@ namespace IoTHubDeviceSimulator.IoTDevice
             }
             catch
             {
-                args.Cancel = true; 
+                args.Cancel = true;
                 ErrorTb.Visibility = Visibility.Visible;
             }
 
@@ -70,6 +70,11 @@ namespace IoTHubDeviceSimulator.IoTDevice
             var b = sender as Button;
             var sensor = b.DataContext as Sensor;
             Device.Sensors.Remove(sensor);
+        }
+
+        private void IntervalTb_OnBeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
+        {
+            args.Cancel = args.NewText.Any(c => !char.IsDigit(c));
         }
     }
 }
