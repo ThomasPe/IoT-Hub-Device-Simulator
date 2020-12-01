@@ -78,11 +78,13 @@
             </ScrollViewer>
         </StackPanel>
 
-        <Image Grid.Row="3" Source="/Assets/arrow.png" VerticalAlignment="Bottom" Height="100" Margin="0 0 220 0" HorizontalAlignment="Right" Visibility="{x:Bind Devices, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}"/>
+        <Image Grid.Row="3" Source="/Assets/arrow.png" VerticalAlignment="Bottom" Height="100" Margin="0 0 350 0" HorizontalAlignment="Right" Visibility="{x:Bind Devices, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}"/>
         <CommandBar Grid.Row="4">
             <AppBarButton x:Name="AddDeviceBtn" Icon="Add" Label="Add Device" Click="AddDeviceBtn_Click"/>
             <AppBarButton x:Name="StartAllBtn" Icon="Play" Label="Start all" Click="StartAllBtn_Click"/>
             <AppBarButton x:Name="StopAllBtn" Icon="Stop" Label="Stop all" Click="StopAllBtn_Click"/>
+            <AppBarButton x:Name="ExportAllBtn" Icon="Share" Label="Export all" Click="ExportAllBtn_Click"/>
+            <AppBarButton x:Name="ImportBtn" Icon="OpenFile" Label="Import" Click="ImportBtn_Click"/>
 
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="View Code on GitHub" Click="GoToGitHub_Click"/>
