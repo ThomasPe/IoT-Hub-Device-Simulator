@@ -48,6 +48,8 @@
                          Text="{x:Bind Device.Interval, Mode=TwoWay, Converter={StaticResource StringToIntConverter}}"
                          BeforeTextChanging="IntervalTb_OnBeforeTextChanging"
                          Visibility="{x:Bind Device, Mode=OneWay, Converter={StaticResource ObjectToVisibilityConverter}}"/>
+                <CheckBox Content="Enable Custom Message Template" IsChecked="{x:Bind Device.IsMessageTemplateEnabled, Mode=TwoWay}"></CheckBox>
+                <TextBox Header="Message Template" Text="{x:Bind Device.MessageTemplate, Mode=TwoWay}" Width="300" PlaceholderText="{}{&quot;telemetry&quot;:{&quot;sensor1&quot;:&quot;[sensor1]&quot;}}"></TextBox>
 
                 <StackPanel Visibility="{x:Bind Device, Mode=OneWay, Converter={StaticResource ObjectToVisibilityConverter}}">
                     <ListView ItemTemplate="{StaticResource ListViewItemTemplate}" ItemsSource="{x:Bind Device.Sensors, Mode=TwoWay}" SelectionMode="None" Margin="0 12 0 12">

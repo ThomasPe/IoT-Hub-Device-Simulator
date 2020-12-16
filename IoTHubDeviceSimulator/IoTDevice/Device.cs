@@ -1,5 +1,4 @@
-﻿using IoTHubDeviceSimulator.IoTDevice;
-using IoTHubDeviceSimulator.Services;
+﻿using IoTHubDeviceSimulator.Services;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -97,6 +96,9 @@ namespace IoTHubDeviceSimulator.IoTDevice
             }
         }
 
+        public string MessageTemplate { get; set; }
+        public bool IsMessageTemplateEnabled { get; set; } = false;
+
         public void Start()
         {
             if (IsRunning)
@@ -144,7 +146,19 @@ namespace IoTHubDeviceSimulator.IoTDevice
                 msg.Add(reading.Key, reading.Value);
             });
 
-            string dataBuffer = JsonConvert.SerializeObject(msg);
+            string dataBuffer;
+            if (IsMessageTemplateEnabled)
+            {
+                dataBuffer = JsonConvert.SerializeObject(msg);
+            }
+            else
+            {
+                dataBuffer = MessageTemplate;
+                foreach(var m in msg)
+                {
+                    dataBuffer = dataBuffer.Replace($"[{m.Key}]", m.Value.ToString());
+                }
+            }
 
             using var eventMessage = new Message(Encoding.UTF8.GetBytes(dataBuffer))
             {
