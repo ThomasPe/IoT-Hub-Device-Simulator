@@ -40,6 +40,8 @@ namespace IoTHubDeviceSimulator.IoTDevice
         public double Min { get; set; }
         public double Max { get; set; }
         public string Value { get; set; }
+        public bool IsApplicationProperty { get; set; } = false;
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string name)

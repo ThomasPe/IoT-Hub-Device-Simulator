@@ -31,7 +31,9 @@
                     <TextBox Text="{x:Bind Value, Mode=TwoWay}" Header="Text" Margin="0 0 0 12" Visibility="{x:Bind Type, Mode=OneWay, Converter={StaticResource NumberFieldsConverter}, ConverterParameter=true}"/>
                     <TextBox Text="{x:Bind Min, Mode=TwoWay}" Header="Minimum Value" Margin="0 0 0 12" Description="Minimum random value" Visibility="{x:Bind Type, Mode=OneWay, Converter={StaticResource NumberFieldsConverter}}"/>
                     <TextBox Text="{x:Bind Max, Mode=TwoWay}" Header="Maximum Value" Margin="0 0 0 12" Description="Maximum random value" Visibility="{x:Bind Type, Mode=OneWay, Converter={StaticResource NumberFieldsConverter}}"/>
+                    <CheckBox IsChecked="{x:Bind IsApplicationProperty, Mode=TwoWay}" Content="Send in Application Properties"/>
                     <Button x:Name="RemoveSensorBtn" Content="Remove Sensor" Click="RemoveSensorBtn_Click" Style="{StaticResource ButtonRevealStyle}"/>
+
                 </StackPanel>
             </controls:Expander>
         </DataTemplate>

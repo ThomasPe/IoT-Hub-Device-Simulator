@@ -137,11 +137,12 @@ namespace IoTHubDeviceSimulator.IoTDevice
                 { "name", Name }
             };
 
-            foreach (var s in Sensors)
+            // Add sensor data to message body
+            Sensors.Where(x => !x.IsApplicationProperty).ToList().ForEach(sensor =>
             {
-                var x = s.GetReading();
-                msg.Add(x.Key, x.Value);
-            }
+                var reading = sensor.GetReading();
+                msg.Add(reading.Key, reading.Value);
+            });
 
             string dataBuffer = JsonConvert.SerializeObject(msg);
 
@@ -151,9 +152,12 @@ namespace IoTHubDeviceSimulator.IoTDevice
                 ContentEncoding = Encoding.UTF8.ToString(),
             };
 
-            //const int TemperatureThreshold = 30;
-            //bool tempAlert = temperature > TemperatureThreshold;
-            //eventMessage.Properties.Add("temperatureAlert", tempAlert.ToString());
+            // Add sensor data to message application properties
+            Sensors.Where(x => x.IsApplicationProperty).ToList().ForEach(sensor =>
+            {
+                var reading = sensor.GetReading();
+                eventMessage.Properties.Add(reading.Key, reading.Value.ToString());
+            });
 
             await _deviceClient.SendEventAsync(eventMessage);
 
