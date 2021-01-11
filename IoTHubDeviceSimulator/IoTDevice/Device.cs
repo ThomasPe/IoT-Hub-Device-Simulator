@@ -147,7 +147,7 @@ namespace IoTHubDeviceSimulator.IoTDevice
             });
 
             string dataBuffer;
-            if (IsMessageTemplateEnabled)
+            if (!IsMessageTemplateEnabled)
             {
                 dataBuffer = JsonConvert.SerializeObject(msg);
             }
