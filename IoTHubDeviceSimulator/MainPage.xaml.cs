@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Services.Store;
 using Windows.Storage;
@@ -20,6 +21,7 @@ namespace IoTHubDeviceSimulator
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         private readonly ILogger _logger;
+        private bool _autoScrollLogs = false;
 
         public ObservableCollection<Device> Devices { get; set; } = new ObservableCollection<Device>();
 
@@ -33,7 +35,7 @@ namespace IoTHubDeviceSimulator
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
             _logger = (ILogger)ServiceProvider.Container.GetService(typeof(ILogger<MainPage>));
-            ActionSink.OnLog += (message) => Logs.Add(message);
+            ActionSink.OnLog += (message) => AddLog(message);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -63,6 +65,16 @@ namespace IoTHubDeviceSimulator
             foreach (var d in Devices)
             {
                 d.Stop();
+            }
+        }
+
+        private async void AddLog(string message)
+        {
+            Logs.Add(message);
+            if (ScrollLogsBtn.IsChecked.HasValue && ScrollLogsBtn.IsChecked.Value)
+            {
+                await Task.Delay(100);
+                LogsScrollViewer.ChangeView(0, LogsScrollViewer.ScrollableHeight, null);
             }
         }
 

@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Loaded="Page_Loaded"
     Background="{ThemeResource SystemControlChromeHighAcrylicWindowMediumBrush}">
@@ -52,9 +53,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ListView Grid.Row="1" ItemTemplate="{StaticResource ListViewItemTemplate1}" x:Name="DeviceList" SelectionChanged="DeviceList_SelectionChanged">
@@ -65,9 +65,11 @@
             </ListView.ItemContainerStyle>
         </ListView>
 
-        <StackPanel Grid.Row="2" Orientation="Vertical" Padding="10">
-            <TextBlock Padding="10">Log:</TextBlock>
-            <ScrollViewer Background="Black" Height="200">
+        <Image Grid.Row="1" Source="/Assets/arrow.png" VerticalAlignment="Bottom" Height="100" Margin="0 0 350 0" HorizontalAlignment="Right" Visibility="{x:Bind Devices, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}"/>
+
+        <controls:Expander Grid.Row="2" Header="Logs" Foreground="Black" IsExpanded="False" Padding="0" ExpandDirection="Up" HorizontalContentAlignment="Stretch">
+
+            <ScrollViewer x:Name="LogsScrollViewer" HorizontalAlignment="Stretch" Padding="12" Height="200" Background="{StaticResource SystemControlAccentDark2AcrylicWindowAccentDark2MediumHighBrush}">
                 <ItemsControl ItemsSource="{x:Bind Logs}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -76,15 +78,18 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-        </StackPanel>
+        </controls:Expander>
 
-        <Image Grid.Row="3" Source="/Assets/arrow.png" VerticalAlignment="Bottom" Height="100" Margin="0 0 350 0" HorizontalAlignment="Right" Visibility="{x:Bind Devices, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}"/>
-        <CommandBar Grid.Row="4">
+        
+
+        <CommandBar Grid.Row="3">
             <AppBarButton x:Name="AddDeviceBtn" Icon="Add" Label="Add Device" Click="AddDeviceBtn_Click"/>
-            <AppBarButton x:Name="StartAllBtn" Icon="Play" Label="Start all" Click="StartAllBtn_Click"/>
-            <AppBarButton x:Name="StopAllBtn" Icon="Stop" Label="Stop all" Click="StopAllBtn_Click"/>
-            <AppBarButton x:Name="ExportAllBtn" Icon="Share" Label="Export all" Click="ExportAllBtn_Click"/>
-            <AppBarButton x:Name="ImportBtn" Icon="OpenFile" Label="Import" Click="ImportBtn_Click"/>
+            <AppBarButton x:Name="StartAllBtn" Icon="Play" Label="Start all Devices" Click="StartAllBtn_Click"/>
+            <AppBarButton x:Name="StopAllBtn" Icon="Stop" Label="Stop all Devices" Click="StopAllBtn_Click"/>
+            <AppBarSeparator></AppBarSeparator>
+            <AppBarToggleButton x:Name="ScrollLogsBtn" Icon="FontDecrease" Label="Auto-Scroll Logs"></AppBarToggleButton>
+            <AppBarButton x:Name="ExportAllBtn" Icon="Share" Label="Export Devices" Click="ExportAllBtn_Click"/>
+            <AppBarButton x:Name="ImportBtn" Icon="OpenFile" Label="Import Devices" Click="ImportBtn_Click"/>
 
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="View Code on GitHub" Click="GoToGitHub_Click"/>
