@@ -13,7 +13,9 @@
     <Page.Resources>
         <converters:BoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" TrueValue="Collapsed" FalseValue="Visible" />
         <converters:StringFormatConverter x:Key="StringFormatConverter" />
-        <converters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" EmptyValue="Visible" NotEmptyValue="Collapsed"/>
+        <converters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" EmptyValue="Collapsed" NotEmptyValue="Visible"/>
+        <converters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverterInvese" EmptyValue="Visible" NotEmptyValue="Collapsed"/>
+
         <DataTemplate x:Key="ListViewItemTemplate1" x:DataType="local:Device">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
@@ -65,9 +67,16 @@
             </ListView.ItemContainerStyle>
         </ListView>
 
-        <Image Grid.Row="1" Source="/Assets/arrow.png" VerticalAlignment="Bottom" Height="100" Margin="0 0 350 0" HorizontalAlignment="Right" Visibility="{x:Bind Devices, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}"/>
+        <Image Grid.Row="1" Source="/Assets/arrow.png" VerticalAlignment="Bottom" Height="100" Margin="0 0 450 0" HorizontalAlignment="Right" Visibility="{x:Bind Devices, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverterInvese}}"/>
 
-        <controls:Expander Grid.Row="2" Header="Logs" Foreground="Black" IsExpanded="False" Padding="0" ExpandDirection="Up" HorizontalContentAlignment="Stretch">
+        <controls:Expander Grid.Row="2" 
+                           Header="Logs" 
+                           Foreground="Black" 
+                           IsExpanded="False" 
+                           Padding="0" 
+                           ExpandDirection="Up" 
+                           HorizontalContentAlignment="Stretch"
+                           Visibility="{x:Bind Devices, Mode=OneWay, Converter={StaticResource CollectionVisibilityConverter}}">
 
             <ScrollViewer x:Name="LogsScrollViewer" HorizontalAlignment="Stretch" Padding="12" Height="200" Background="{StaticResource SystemControlAccentDark2AcrylicWindowAccentDark2MediumHighBrush}">
                 <ItemsControl ItemsSource="{x:Bind Logs}">
