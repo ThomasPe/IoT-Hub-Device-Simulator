@@ -21,7 +21,6 @@ namespace IoTHubDeviceSimulator
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         private readonly ILogger _logger;
-        private bool _autoScrollLogs = false;
 
         public ObservableCollection<Device> Devices { get; set; } = new ObservableCollection<Device>();
 
